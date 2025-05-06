@@ -27,7 +27,7 @@ st.set_page_config(
 )
 def download_model():
     if not os.path.exists("multi-qa-MiniLM-L6-cos-v1"):
-        url = "https://drive.google.com/file/d/1ZPXTAZCy4fmGgeCqdG5AUKSqo4TUFMpy/view?usp=sharing"  # Replace with your public model link
+        url = "https://drive.google.com/uc?id=1ZPXTAZCy4fmGgeCqdG5AUKSqo4TUFMpy&export=download"  # Replace with your public model link
         response = requests.get(url)
         with open("model.zip", "wb") as f:
             f.write(response.content)

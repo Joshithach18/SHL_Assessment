@@ -1,9 +1,9 @@
-Streamlit
-flask
+streamlit
+lxml[html_clean]
 requests
 pandas
-nltk
 sentence-transformers
 faiss-cpu
+nltk
 cohere
 newspaper3k

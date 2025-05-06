@@ -9,8 +9,7 @@ from nltk.corpus import stopwords
 import faiss
 from sentence_transformers import SentenceTransformer
 import cohere
-import requests
-import zipfile
+
 # Download necessary NLTK data
 try:
     nltk.data.find('tokenizers/punkt')
@@ -28,44 +27,11 @@ st.set_page_config(
 
 # Set up Cohere API key directly in the code
 COHERE_API_KEY = "j7uTsOOCsQS99XqLFRUFWHWzWQzADufa6AuHWxXU"  # Replace with your actual API key
-def download_model():
-    """
-    Download and extract the model zip file if it does not already exist locally.
-    """
-    model_dir = "multi-qa-MiniLM-L6-cos-v1"
-    model_zip = "model.zip"
-    url = "https://drive.google.com/file/d/1ZPXTAZCy4fmGgeCqdG5AUKSqo4TUFMpy/view?usp=drive_link"  # Replace with your public model link
 
-    if not os.path.exists(model_dir):
-        st.write("Downloading the model. Please wait...")
-        try:
-            # Download the zip file
-            response = requests.get(url, timeout=120)
-            if response.status_code != 200:
-                raise Exception(f"Failed to download file: HTTP {response.status_code}")
-
-            # Save the downloaded content to a local zip file
-            with open(model_zip, "wb") as f:
-                f.write(response.content)
-
-            # Extract the zip file
-            with zipfile.ZipFile(model_zip, "r") as zip_ref:
-                zip_ref.extractall(".")
-            os.remove(model_zip)  # Clean up the zip file after extraction
-            st.write("Model downloaded and extracted successfully.")
-
-        except zipfile.BadZipFile:
-            st.error("The downloaded file is not a valid zip file. Please check the URL.")
-            if os.path.exists(model_zip):
-                os.remove(model_zip)
-        except Exception as e:
-            st.error(f"An error occurred during the download or extraction process: {e}")
-    else:
-        st.write("Model directory already exists. Skipping download.")
 @st.cache_resource
 def load_model():
     """Load the sentence transformer model for embeddings"""
-    return SentenceTransformer("./multi-qa-MiniLM-L6-cos-v1",local_files_only=True)
+    return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 @st.cache_data
 def load_data():

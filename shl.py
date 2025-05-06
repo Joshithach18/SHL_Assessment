@@ -10,6 +10,7 @@ import faiss
 from sentence_transformers import SentenceTransformer
 import cohere
 import requests
+import zipfile
 # Download necessary NLTK data
 try:
     nltk.data.find('tokenizers/punkt')

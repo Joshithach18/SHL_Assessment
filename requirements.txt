@@ -1,3 +1,4 @@
+flask
 streamlit
 lxml[html_clean]
 requests

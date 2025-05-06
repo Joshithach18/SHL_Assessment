@@ -31,7 +31,7 @@ COHERE_API_KEY = "j7uTsOOCsQS99XqLFRUFWHWzWQzADufa6AuHWxXU"  # Replace with your
 @st.cache_resource
 def load_model():
     """Load the sentence transformer model for embeddings"""
-    return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
+    return SentenceTransformer("sentence-transformers/multi-qa-MiniLM-L6-cos-v1")
 
 @st.cache_data
 def load_data():

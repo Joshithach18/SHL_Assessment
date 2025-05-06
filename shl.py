@@ -9,7 +9,7 @@ from nltk.corpus import stopwords
 import faiss
 from sentence_transformers import SentenceTransformer
 import cohere
-
+import requests
 # Download necessary NLTK data
 try:
     nltk.data.find('tokenizers/punkt')

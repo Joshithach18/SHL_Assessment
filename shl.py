@@ -25,6 +25,10 @@ st.set_page_config(
     page_icon="🔍",
     layout="wide"
 )
+import os
+import requests
+import zipfile
+
 def download_model():
     if not os.path.exists("multi-qa-MiniLM-L6-cos-v1"):
         url = "https://drive.google.com/uc?id=1ZPXTAZCy4fmGgeCqdG5AUKSqo4TUFMpy&export=download"  # Direct download link
@@ -43,15 +47,14 @@ def download_model():
                 zip_ref.extractall(".")
             
             os.remove("model.zip")  # Clean up
-
+            print("Model downloaded and extracted successfully.")
+        
         except zipfile.BadZipFile:
             print("Error: The downloaded file is not a valid zip file.")
             if os.path.exists("model.zip"):
                 os.remove("model.zip")  # Delete corrupted file
         except Exception as e:
             print(f"An error occurred: {e}")
-
-download_model()
 # Set up Cohere API key directly in the code
 COHERE_API_KEY = "j7uTsOOCsQS99XqLFRUFWHWzWQzADufa6AuHWxXU"  # Replace with your actual API key
 

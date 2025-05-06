@@ -25,44 +25,14 @@ st.set_page_config(
     page_icon="🔍",
     layout="wide"
 )
-import os
-import requests
-import zipfile
 
-def download_model():
-    if not os.path.exists("multi-qa-MiniLM-L6-cos-v1"):
-        url = "https://drive.google.com/uc?id=1ZPXTAZCy4fmGgeCqdG5AUKSqo4TUFMpy&export=download"  # Direct download link
-        try:
-            # Download the file
-            response = requests.get(url, timeout=120)
-            if response.status_code != 200:
-                raise Exception(f"Failed to download file: HTTP {response.status_code}")
-            
-            # Save the file
-            with open("model.zip", "wb") as f:
-                f.write(response.content)
-            
-            # Verify the downloaded file
-            with zipfile.ZipFile("model.zip", "r") as zip_ref:
-                zip_ref.extractall(".")
-            
-            os.remove("model.zip")  # Clean up
-            print("Model downloaded and extracted successfully.")
-        
-        except zipfile.BadZipFile:
-            print("Error: The downloaded file is not a valid zip file.")
-            if os.path.exists("model.zip"):
-                os.remove("model.zip")  # Delete corrupted file
-        except Exception as e:
-            print(f"An error occurred: {e}")
 # Set up Cohere API key directly in the code
 COHERE_API_KEY = "j7uTsOOCsQS99XqLFRUFWHWzWQzADufa6AuHWxXU"  # Replace with your actual API key
 
 @st.cache_resource
 def load_model():
     """Load the sentence transformer model for embeddings"""
-    download_model()
-    return SentenceTransformer("./multi-qa-MiniLM-L6-cos-v1",local_files_only=True)
+    return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1",local_files_only=True)
 
 @st.cache_data
 def load_data():

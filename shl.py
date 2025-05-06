@@ -24,6 +24,18 @@ st.set_page_config(
     page_icon="🔍",
     layout="wide"
 )
+def download_model():
+    if not os.path.exists("multi-qa-MiniLM-L6-cos-v1"):
+        url = "https://drive.google.com/file/d/1ZPXTAZCy4fmGgeCqdG5AUKSqo4TUFMpy/view?usp=sharing"  # Replace with your public model link
+        response = requests.get(url)
+        with open("model.zip", "wb") as f:
+            f.write(response.content)
+        with zipfile.ZipFile("model.zip", "r") as zip_ref:
+            zip_ref.extractall(".")
+        os.remove("model.zip")
+
+# Ensure the model is downloaded before proceeding
+download_model()
 
 # Set up Cohere API key directly in the code
 COHERE_API_KEY = "j7uTsOOCsQS99XqLFRUFWHWzWQzADufa6AuHWxXU"  # Replace with your actual API key

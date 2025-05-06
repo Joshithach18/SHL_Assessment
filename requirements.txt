@@ -1,0 +1,9 @@
+Streamlit
+flask
+requests
+pandas
+nltk
+sentence-transformers
+faiss-cpu
+cohere
+newspaper3k

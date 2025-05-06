@@ -1,43 +1,51 @@
 from flask import Flask, jsonify, request
 import pandas as pd
 import faiss
-from sentence_transformers import SentenceTransformer
+import cohere
+import numpy as np
 
 app = Flask(__name__)
 
-# Load model and data
-model = SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
-data =pd.read_csv("shlassessments.csv", encoding='utf-8', encoding_errors='ignore')
+# Initialize Cohere client
+COHERE_API_KEY = "QU0eJVAl4MbACkDCy9WPN640qiViL1po6Z6kPr8S"  # Replace with your actual key
+co = cohere.Client(COHERE_API_KEY)
+
+# Load CSV data
+data = pd.read_csv("shlassessments.csv", encoding='utf-8', encoding_errors='ignore')
 data['combined_text'] = data.apply(lambda row: " ".join(row.dropna().astype(str)), axis=1)
 
+# Generate Cohere embeddings
+print("Generating embeddings from Cohere...")
+response = co.embed(texts=data['combined_text'].tolist(), model="embed-english-v3.0", input_type="search_document")
+embeddings = np.array(response.embeddings)
+
 # Create FAISS index
-embeddings = model.encode(data['combined_text'].tolist(), convert_to_tensor=True)
 dimension = embeddings.shape[1]
 faiss_index = faiss.IndexFlatIP(dimension)
-faiss_index.add(embeddings.numpy())
+faiss_index.add(embeddings)
 
 @app.route('/', methods=['GET'])
 def home():
-    """Default route for the API."""
     return jsonify({"message": "Welcome to the SHL Assessment Recommendation API"}), 200
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    """Health check endpoint to verify the API is running."""
     return jsonify({"status": "healthy"}), 200
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
-    """Recommendation endpoint to find the top assessments."""
     content = request.json
     query = content.get("query", "")
     top_n = int(content.get("top_n", 10))
 
-    # Encode the query and search
-    query_embedding = model.encode([query], convert_to_tensor=True)
-    scores, indices = faiss_index.search(query_embedding.numpy(), top_n)
+    # Generate embedding for the query using Cohere
+    query_response = co.embed(texts=[query], model="embed-english-v3.0", input_type="search_query")
+    query_embedding = np.array(query_response.embeddings)
 
-    # Format results
+    # FAISS search
+    scores, indices = faiss_index.search(query_embedding, top_n)
+
+    # Format and return results
     results = []
     for idx in indices[0]:
         result = {

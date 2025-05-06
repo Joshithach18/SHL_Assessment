@@ -59,7 +59,7 @@ COHERE_API_KEY = "j7uTsOOCsQS99XqLFRUFWHWzWQzADufa6AuHWxXU"  # Replace with your
 def load_model():
     """Load the sentence transformer model for embeddings"""
     download_model()
-    return SentenceTransformer("./multi-qa-MiniLM-L6-cos-v1")
+    return SentenceTransformer("./multi-qa-MiniLM-L6-cos-v1",local_files_only=True)
 
 @st.cache_data
 def load_data():
